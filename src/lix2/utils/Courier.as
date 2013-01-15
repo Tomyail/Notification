@@ -32,9 +32,11 @@ package lix2.utils
 	public class Courier
 	{
 		private static var id:int=0;
-
-		public function Courier()
+		private var isSignal:Boolean
+		
+		public function Courier(isSingle:Boolean = false)
 		{
+			this.isSignal = isSingle;
 			type=getQualifiedClassName(this) + (id++);
 		}
 
@@ -42,7 +44,17 @@ package lix2.utils
 
 		public function add(callback:Function, autoRemove:Boolean=false):void
 		{
-			Notification.addNotification(type, callback, autoRemove);
+			if(isSignal)
+			{
+				if(!Notification.hasNotification(type))
+				{
+					Notification.addNotification(type, callback, autoRemove);
+				}
+			}
+			else
+			{
+				Notification.addNotification(type, callback, autoRemove);
+			}
 		}
 
 		public function send(... args):void
